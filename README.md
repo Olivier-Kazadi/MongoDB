@@ -1,4 +1,4 @@
- #App. Authentification
+# App. Authentification
 
  Il s'agit d'un projet du cours de Base des données avancée où il nous est démandé de recréer une base de données minimale d'un système d'authentification.
  
