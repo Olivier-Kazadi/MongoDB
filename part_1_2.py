@@ -1,5 +1,6 @@
 from faker import Faker
 from datetime import datetime, timedelta
+import random
 
 fake = Faker()
 s_date = datetime(2023, 1, 1, 0, 0, 0)
@@ -8,12 +9,26 @@ e_date = datetime(2023, 6, 30, 23, 59, 59)
 # Génération des données aléatoires pour 100 utilisateurs
 users = []
 for _ in range(100):
+    username_length = random.randint(9, 15)
+    username = fake.user_name()[:username_length]
+    
+    password_length = random.randint(9, 15)
+    password = fake.password()[:password_length]
+    
+    while len(username) <= 8:
+        username_length = random.randint(9, 15)
+        username = fake.user_name()[:username_length]
+    
+    while len(password) <= 8:
+        password_length = random.randint(9, 15)
+        password = fake.password()[:password_length]
+        
     user_data = {
         "firstname": fake.first_name(),
         "lastname": fake.last_name(),
         "email": fake.email(),
-        "username":fake.user_name(),
-        "password":fake.password(),
+        "username":username,
+        "password":password,
         "created_at":fake.date_time_between(start_date=s_date, end_date=e_date).strftime("%Y-%m-%d %H:%M:%S")
     }
     users.append(user_data)
@@ -47,10 +62,12 @@ with open("part_1_2.sql", "w") as file:
                    f"('{user_data['firstname']}', '{user_data['lastname']}', '{user_data['email']}', "
                    f"'{user_data['username']}', '{user_data['password']}', '{user_data['created_at']}');\n")
 
+    # Requêtes pour l'insertion des mails
     for verification_data in email_verifications:
         file.write(f"INSERT INTO user_email_verification (user_id, verified_at) VALUES "
                    f"({verification_data['user_id']}, '{verification_data['verified_at']}');\n")
         
+    # Requêtes pour l'insertion des sessions        
     for session_data in sessions:
         file.write(f"INSERT INTO session_table (user_id, connected_at) VALUES "
                    f"({session_data['user_id']}, '{session_data['connected_at']}');\n")
