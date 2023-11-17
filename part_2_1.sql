@@ -1,3 +1,12 @@
+-- Création de la table de souscription
+CREATE TABLE IF NOT EXISTS subscription (
+    subscription_id SERIAL PRIMARY KEY,
+    subscribed_at DATE,
+    user_id INT,
+    paid INT CHECK (paid IN (10, 100, 1000)),
+    subscription_plan VARCHAR(20) CHECK (subscription_plan IN ('monthly', 'yearly', 'lifetime'))
+);
+
 -- Insertions dans la table subscription
 INSERT INTO subscription (subscribed_at, user_id, paid, subscription_plan) VALUES
     ('2023-01-15', 1, 10, 'monthly'),
